@@ -1,11 +1,5 @@
 #include "cache.h"
 
-/*
-*   LLC Early Core Invalidation (ECI), on miss, update both L1 and L2 caches so the missed way is the MRU
-*   Prior to evicting the LRU in the L2 cache, replace the new LRU in the L1 cache with the current LRU
-*   Then prepare the new LRU for the ECI on the next cache miss  
-*/
-
 // initialize replacement state
 void CACHE::llc_initialize_replacement()
 {
@@ -50,14 +44,7 @@ void CACHE::llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t wa
     if (hit && (type == WRITEBACK)) // writeback hit does not update LRU state
         return;
 
-    victim_back_invalidate(set, way);
     return lru_update(set, way);
-}
-
-// send LRU of LLC to LRU of L1C and then evict LRU in LLC
-void CACHE::victim_back_invalidate(uint32_t set, uint32_t way, uint32_t cpu){
-    uint64_t lruAddress = block[set][way].address;
-    insert_at_lru(cpu, lruAddress);
 }
 
 void CACHE::llc_replacement_final_stats()

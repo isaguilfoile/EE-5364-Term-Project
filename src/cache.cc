@@ -116,7 +116,7 @@ void CACHE::handle_fill()
 
             }
             else
-                update_replacement_state(fill_cpu, set, way, MSHR.entry[mshr_index].full_addr, MSHR.entry[mshr_index].ip, 0, MSHR.entry[mshr_index].type, 0);
+                update_replacement_state(fill_cpu, set, way, MSHR.entry[mshr_index].full_addr, MSHR.entry[mshr_index].ip, 0, MSHR.entry[mshr_index].type, 0, MSHR.entry[mshr_index].instr_id);
 
             // COLLECT STATS
             sim_miss[fill_cpu][MSHR.entry[mshr_index].type]++;
@@ -252,7 +252,7 @@ void CACHE::handle_fill()
                 llc_update_replacement_state(fill_cpu, set, way, MSHR.entry[mshr_index].full_addr, MSHR.entry[mshr_index].ip, block[set][way].full_addr, MSHR.entry[mshr_index].type, 0);
             }
             else
-                update_replacement_state(fill_cpu, set, way, MSHR.entry[mshr_index].full_addr, MSHR.entry[mshr_index].ip, block[set][way].full_addr, MSHR.entry[mshr_index].type, 0);
+                update_replacement_state(fill_cpu, set, way, MSHR.entry[mshr_index].full_addr, MSHR.entry[mshr_index].ip, block[set][way].full_addr, MSHR.entry[mshr_index].type, 0, MSHR.entry[mshr_index].instr_id);
 
             // COLLECT STATS
             sim_miss[fill_cpu][MSHR.entry[mshr_index].type]++;
@@ -326,7 +326,7 @@ void CACHE::handle_writeback()
 
             }
             else
-                update_replacement_state(writeback_cpu, set, way, block[set][way].full_addr, WQ.entry[index].ip, 0, WQ.entry[index].type, 1);
+                update_replacement_state(writeback_cpu, set, way, block[set][way].full_addr, WQ.entry[index].ip, 0, WQ.entry[index].type, 1, MSHR.entry[mshr_index].instr_id);
 
             // COLLECT STATS
             sim_hit[writeback_cpu][WQ.entry[index].type]++;
@@ -595,7 +595,7 @@ void CACHE::handle_writeback()
                     // }
                     // else
                     if (cache_type != IS_LLC){
-                        update_replacement_state(writeback_cpu, set, way, WQ.entry[index].full_addr, WQ.entry[index].ip, block[set][way].full_addr, WQ.entry[index].type, 0);
+                        update_replacement_state(writeback_cpu, set, way, WQ.entry[index].full_addr, WQ.entry[index].ip, block[set][way].full_addr, WQ.entry[index].type, 0, MSHR.entry[mshr_index].instr_id);
                     }
                     // COLLECT STATS
                     sim_miss[writeback_cpu][WQ.entry[index].type]++;
@@ -688,7 +688,7 @@ void CACHE::handle_read()
 
                 }
                 else
-                    update_replacement_state(read_cpu, set, way, block[set][way].full_addr, RQ.entry[index].ip, 0, RQ.entry[index].type, 1);
+                    update_replacement_state(read_cpu, set, way, block[set][way].full_addr, RQ.entry[index].ip, 0, RQ.entry[index].type, 1, MSHR.entry[mshr_index].instr_id);
 
                 // COLLECT STATS
                 sim_hit[read_cpu][RQ.entry[index].type]++;
@@ -911,7 +911,7 @@ void CACHE::handle_prefetch()
 
                 }
                 else
-                    update_replacement_state(prefetch_cpu, set, way, block[set][way].full_addr, PQ.entry[index].ip, 0, PQ.entry[index].type, 1);
+                    update_replacement_state(prefetch_cpu, set, way, block[set][way].full_addr, PQ.entry[index].ip, 0, PQ.entry[index].type, 1, MSHR.entry[mshr_index].instr_id);
 
                 // COLLECT STATS
                 sim_hit[prefetch_cpu][PQ.entry[index].type]++;

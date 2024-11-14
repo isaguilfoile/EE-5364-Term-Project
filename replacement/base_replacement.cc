@@ -74,7 +74,7 @@ void CACHE::lru_update(uint32_t set, uint32_t way)
 
 void CACHE::insert_at_lru(uint32_t cpu, uint64_t address){
     uint32_t set = (address >> LOG2_BLOCK_SIZE) & (NUM_SET - 1);
-    uint64_t tag = address >> (LOG2_BLOCK_SIZE);
+    uint64_t tag = address >> (LOG2_BLOCK_SIZE + 4);
 
     uint32_t way;
     bool foundInL1 = false;

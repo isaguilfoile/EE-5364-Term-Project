@@ -595,7 +595,7 @@ void CACHE::handle_writeback()
                     // }
                     // else
                     if (cache_type != IS_LLC){
-                        update_replacement_state(writeback_cpu, set, way, WQ.entry[index].full_addr, WQ.entry[index].ip, block[set][way].full_addr, WQ.entry[index].type, 0, MSHR.entry[mshr_index].instr_id);
+                        update_replacement_state(writeback_cpu, set, way, WQ.entry[index].full_addr, WQ.entry[index].ip, block[set][way].full_addr, WQ.entry[index].type, 0, WQ.entry[index].instr_id);
                     }
                     // COLLECT STATS
                     sim_miss[writeback_cpu][WQ.entry[index].type]++;

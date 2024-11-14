@@ -326,7 +326,7 @@ void CACHE::handle_writeback()
 
             }
             else
-                update_replacement_state(writeback_cpu, set, way, block[set][way].full_addr, WQ.entry[index].ip, 0, WQ.entry[index].type, 1, MSHR.entry[mshr_index].instr_id);
+                update_replacement_state(writeback_cpu, set, way, block[set][way].full_addr, WQ.entry[index].ip, 0, WQ.entry[index].type, 1, WQ.entry[index].instr_id);
 
             // COLLECT STATS
             sim_hit[writeback_cpu][WQ.entry[index].type]++;

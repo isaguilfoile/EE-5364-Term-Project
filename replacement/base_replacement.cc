@@ -13,7 +13,7 @@ uint32_t CACHE::find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const
 
 void CACHE::update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit)
 {
-    uint32_t newWay = llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
+    uint32_t newWay = llc_find_victim(cpu, instr_id, set, current_set, ip, full_addr, type);
     if (type == WRITEBACK) {
         if (hit) // wrietback hit does not update LRU state
             lru_update(set, newWay);

@@ -911,7 +911,7 @@ void CACHE::handle_prefetch()
 
                 }
                 else
-                    update_replacement_state(prefetch_cpu, set, way, block[set][way].full_addr, PQ.entry[index].ip, 0, PQ.entry[index].type, 1, MSHR.entry[mshr_index].instr_id);
+                    update_replacement_state(prefetch_cpu, set, way, block[set][way].full_addr, PQ.entry[index].ip, 0, PQ.entry[index].type, 1, PQ.entry[index].instr_id);
 
                 // COLLECT STATS
                 sim_hit[prefetch_cpu][PQ.entry[index].type]++;

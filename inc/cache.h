@@ -184,11 +184,13 @@ class CACHE : public MEMORY {
          handle_prefetch();
 
     void add_mshr(PACKET *packet),
+        //Base replacement set
          update_fill_cycle(),
          llc_initialize_replacement(),
          update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit),
          llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit),
          lru_update(uint32_t set, uint32_t way),
+         insert_at_lru(uint32_t cpu, uint64_t address),
          fill_cache(uint32_t set, uint32_t way, PACKET *packet),
          replacement_final_stats(),
          llc_replacement_final_stats(),
@@ -205,6 +207,10 @@ class CACHE : public MEMORY {
          l2c_prefetcher_final_stats(),
          llc_prefetcher_final_stats();
 
+         //TLH replacement set
+         eci
+
+
     uint32_t l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, uint8_t type, uint32_t metadata_in),
          llc_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, uint8_t type, uint32_t metadata_in),
          l2c_prefetcher_cache_fill(uint64_t addr, uint32_t set, uint32_t way, uint8_t prefetch, uint64_t evicted_addr, uint32_t metadata_in),
@@ -212,10 +218,10 @@ class CACHE : public MEMORY {
     
     uint32_t get_set(uint64_t address),
              get_way(uint64_t address, uint32_t set),
+             //Base replacement set
              find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type),
              llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type),
              lru_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
-
     	     void shiftWQEntries(int index);
 	     void check_inclusive();
              bool make_inclusive(int cpu,int evict_cpu,CACHE &cache,uint64_t address,uint64_t instr_id);

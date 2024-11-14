@@ -5,23 +5,23 @@
 *   LLC Early Core Invalidation (ECI), in the L1 cache, on miss in L1 it acts normally, but in most cases, both current
 *   members of the cache (if the cache is 2 members) will be evicted, and replaced with members of the L2 cache
 */
-uint32_t CACHE::eci_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
+uint32_t CACHE::find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
 {
     // baseline LRU replacement policy for other caches 
-    return eci_lru_victim(cpu, instr_id, set, current_set, ip, full_addr, type); 
+    return lru_victim(cpu, instr_id, set, current_set, ip, full_addr, type); 
 }
 
-void CACHE::eci_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit)
+void CACHE::update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit)
 {
     if (type == WRITEBACK) {
         if (hit) // wrietback hit does not update LRU state
             return;
     }
 
-    return eci_lru_update(set, way);
+    return lru_update(set, way);
 }
 //never used? why
-uint32_t CACHE::eci_lru_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
+uint32_t CACHE::lru_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
 {
     uint32_t way = 0;
 
@@ -61,7 +61,7 @@ uint32_t CACHE::eci_lru_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, co
     return way;
 }
 
-void CACHE::eci_lru_update(uint32_t set, uint32_t way)
+void CACHE::lru_update(uint32_t set, uint32_t way)
 {
     // update lru replacement state
     for (uint32_t i=0; i<NUM_WAY; i++) {
@@ -72,7 +72,7 @@ void CACHE::eci_lru_update(uint32_t set, uint32_t way)
     block[set][way].lru = 0; // promote to the MRU position
 }
 
-void CACHE::eci_insert_at_lru(uint32_t cpu, uint64_t address){
+void CACHE::insert_at_lru(uint32_t cpu, uint64_t address){
     uint32_t set = (address >> LOG2_BLOCK_SIZE) & (NUM_SET - 1);
     uint64_t tag = address >> (LOG2_BLOCK_SIZE);
 
@@ -125,33 +125,33 @@ void CACHE::eci_insert_at_lru(uint32_t cpu, uint64_t address){
     block[set][way].lru = NUM_WAY - 1; // block is now lru
 }
 
-void CACHE::eci_replacement_final_stats()
+void CACHE::replacement_final_stats()
 {
 
 }
 
 #ifdef NO_CRC2_COMPILE
-void eci_InitReplacementState()
+void InitReplacementState()
 {
     
 }
 
-uint32_t eci_GetVictimInSet (uint32_t cpu, uint32_t set, const BLOCK *current_set, uint64_t PC, uint64_t paddr, uint32_t type)
+uint32_t GetVictimInSet (uint32_t cpu, uint32_t set, const BLOCK *current_set, uint64_t PC, uint64_t paddr, uint32_t type)
 {
     return 0;
 }
 
-void eci_UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t paddr, uint64_t PC, uint64_t victim_addr, uint32_t type, uint8_t hit)
+void UpdateReplacementState (uint32_t cpu, uint32_t set, uint32_t way, uint64_t paddr, uint64_t PC, uint64_t victim_addr, uint32_t type, uint8_t hit)
 {
     
 }
 
-void eci_PrintStats_Heartbeat()
+void PrintStats_Heartbeat()
 {
     
 }
 
-void eci_PrintStats()
+void PrintStats()
 {
 
 }

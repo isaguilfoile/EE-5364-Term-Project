@@ -44,6 +44,7 @@ void CACHE::llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t wa
     if (hit && (type == WRITEBACK)) // writeback hit does not update LRU state
         return;
 
+    eci_victim_back_invalidate(set, way, cpu);
     return lru_update(set, way);
 }
 

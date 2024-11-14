@@ -72,9 +72,9 @@ void CACHE::lru_update(uint32_t set, uint32_t way)
     block[set][way].lru = 0; // promote to the MRU position
 }
 
-void CACHE::insert_at_lru(uint32_t cpu, uint64_t address){
-    uint32_t set = (address >> LOG2_BLOCK_SIZE) & (NUM_SET - 1);
-    uint64_t tag = address >> (LOG2_BLOCK_SIZE + 4);
+void CACHE::eci_insert_at_lru(uint32_t cpu, uint64_t address){
+    uint32_t set = L1D_SET; 
+    uint64_t tag = address / (64*LLC_SET);
 
     uint32_t way;
     bool foundInL1 = false;
@@ -82,7 +82,6 @@ void CACHE::insert_at_lru(uint32_t cpu, uint64_t address){
     for(way = 0; way < NUM_WAY; way++){
         if (block[set][way].valid && block[set][way].tag == tag){
             foundInL1 = true;
-            break;
         }
     }
     // if the value is in the L1 cache, just place it into the LRU position

@@ -207,8 +207,6 @@ class CACHE : public MEMORY {
          l2c_prefetcher_final_stats(),
          llc_prefetcher_final_stats();
 
-         //TLH replacement set
-         eci
 
 
     uint32_t l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, uint8_t type, uint32_t metadata_in),

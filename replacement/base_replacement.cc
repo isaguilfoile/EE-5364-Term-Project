@@ -81,12 +81,12 @@ void CACHE::insert_at_lru(uint32_t cpu, uint64_t address){
 
     for(way = 0; way < NUM_WAY; way++){
         if (block[set][way].valid && block[set][way].tag == tag){
-            found = true;
+            foundInL1 = true;
             break;
         }
     }
     // if the value is in the L1 cache, just place it into the LRU position
-    if(found){
+    if(foundInL1){
         uint32_t currLRU = block[set][way].lru;
             // update lru replacement state
         for (uint32_t i=0; i<NUM_WAY; i++) {

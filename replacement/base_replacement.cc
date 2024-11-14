@@ -16,7 +16,7 @@ void CACHE::update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, u
     uint32_t newWay = llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
     if (type == WRITEBACK) {
         if (hit) // wrietback hit does not update LRU state
-            way = lru_update(set, newWay);
+            lru_update(set, newWay);
             return;
     }
 

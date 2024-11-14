@@ -688,7 +688,7 @@ void CACHE::handle_read()
 
                 }
                 else
-                    update_replacement_state(read_cpu, set, way, block[set][way].full_addr, RQ.entry[index].ip, 0, RQ.entry[index].type, 1, MSHR.entry[mshr_index].instr_id);
+                    update_replacement_state(read_cpu, set, way, block[set][way].full_addr, RQ.entry[index].ip, 0, RQ.entry[index].type, 1, RQ.entry[index].instr_id);
 
                 // COLLECT STATS
                 sim_hit[read_cpu][RQ.entry[index].type]++;

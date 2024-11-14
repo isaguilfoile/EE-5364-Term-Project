@@ -47,6 +47,12 @@ void CACHE::llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t wa
     return lru_update(set, way);
 }
 
+void CACHE::eci_victim_back_invalidate(uint32_t set, uint32_t way, uint32_t cpu)
+{
+    uint64_t lruAddress = block[set][way].address;
+    eci_insert_at_lru(cpu, lruAddress);
+}
+
 void CACHE::llc_replacement_final_stats()
 {
 

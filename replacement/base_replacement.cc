@@ -18,7 +18,6 @@ void CACHE::update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, u
         if (hit) // wrietback hit does not update LRU state
             return;
     }
-    if (sentFromLRU)
         lru_update(set, newLRU);
     return lru_update(set, way);
 }

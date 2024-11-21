@@ -187,11 +187,9 @@ class CACHE : public MEMORY {
         // Base replacement set
         update_fill_cycle(),
         llc_initialize_replacement(),
-        eci_victim_back_invalidate(uint32_t set, uint32_t way, uint32_t cpu),
-        update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit),
-        llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit),
+        update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit, uint64_t instr_id, const BLOCK *current_set, bool sentFromLRU),
+        llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit, uint64_t instr_id, const BLOCK *current_set),
         lru_update(uint32_t set, uint32_t way),
-        eci_insert_at_lru(uint32_t cpu, uint64_t address),
         fill_cache(uint32_t set, uint32_t way, PACKET *packet),
         replacement_final_stats(),
         llc_replacement_final_stats(),

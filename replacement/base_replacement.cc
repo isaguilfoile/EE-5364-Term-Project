@@ -11,13 +11,15 @@ uint32_t CACHE::find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const
     return lru_victim(cpu, instr_id, set, current_set, ip, full_addr, type); 
 }
 
-void CACHE::update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit)
+void CACHE::update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit, uint64_t instr_id, const BLOCK *current_set, bool sentFromLRU)
 {
+    uint32_t newLRU = llc_find_victim(cpu, instr_id, set, current_set, ip, full_addr, type);
     if (type == WRITEBACK) {
         if (hit) // wrietback hit does not update LRU state
             return;
     }
-
+    if (sentFromLRU)
+        lru_update(set, newLRU);
     return lru_update(set, way);
 }
 //never used? why
@@ -70,58 +72,6 @@ void CACHE::lru_update(uint32_t set, uint32_t way)
         }
     }
     block[set][way].lru = 0; // promote to the MRU position
-}
-
-void CACHE::eci_insert_at_lru(uint32_t cpu, uint64_t address){
-    uint32_t set = L1D_SET; 
-    uint64_t tag = address / (64*LLC_SET);
-
-    uint32_t way;
-    bool foundInL1 = false;
-
-    for(way = 0; way < NUM_WAY; way++){
-        if (block[set][way].valid && block[set][way].tag == tag){
-            foundInL1 = true;
-        }
-    }
-    // if the value is in the L1 cache, just place it into the LRU position
-    if(foundInL1){
-        uint32_t currLRU = block[set][way].lru;
-            // update lru replacement state
-        for (uint32_t i=0; i<NUM_WAY; i++) {
-            if (block[set][i].lru < currLRU) {
-                block[set][i].lru++;
-            }
-        }
-        block[set][way].lru = NUM_WAY-1; // promote to the LRU position
-        return;
-    }
-    //not found, must insert, look for invalid block first
-    for(way = 0; way < NUM_WAY; way++){
-        if(!block[set][way].valid){
-            break;
-        }
-    }
-
-    //if not found, evict the lru
-    if (way == NUM_WAY){
-        for (way = 0; way < NUM_WAY; way++){
-            if(block[set][way].lru == NUM_WAY-1)
-                break;
-        }
-    }
-    //insert the block into the selected way
-    block[set][way].valid = true;
-    block[set][way].tag = tag;
-    block[set][way].address = address;
-
-    //update the counters
-    for (uint32_t i = 0; i < NUM_WAY; i++) {
-        if (block[set][i].lru < block[set][way].lru) {
-            block[set][i].lru++;
-        }
-    }
-    block[set][way].lru = NUM_WAY - 1; // block is now lru
 }
 
 void CACHE::replacement_final_stats()

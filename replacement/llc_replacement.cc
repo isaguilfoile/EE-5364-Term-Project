@@ -14,7 +14,7 @@ uint32_t CACHE::llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, c
 }
 
 // called on every cache hit and cache fill
-void CACHE::llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit)
+void CACHE::llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit, uint64_t instr_id, const BLOCK *current_set)
 {
     string TYPE_NAME;
     if (type == LOAD)
@@ -44,14 +44,13 @@ void CACHE::llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t wa
     if (hit && (type == WRITEBACK)) // writeback hit does not update LRU state
         return;
 
-    eci_victim_back_invalidate(set, way, cpu);
-    return lru_update(set, way);
-}
-
-void CACHE::eci_victim_back_invalidate(uint32_t set, uint32_t way, uint32_t cpu)
-{
-    uint64_t lruAddress = block[set][way].address;
-    eci_insert_at_lru(cpu, lruAddress);
+    if (hit)
+        return lru_update(set, way);
+    else
+    {
+        update_replacement_state(cpu, set, way, full_addr, ip, victim_addr, type, hit, instr_id, current_set, true);
+        return lru_update(set, way);
+    }
 }
 
 void CACHE::llc_replacement_final_stats()

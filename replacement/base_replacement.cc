@@ -33,6 +33,8 @@ void CACHE::QBS_Search(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_a
             QBS_Search(cpu, set, way, full_addr, ip, victim_addr, type, hit, instr_id, current_set);
             return;
         }
+        else
+            return;
     }
     lru_update(set, way);
     llc_update_replacement_state(cpu, set, way, full_addr, ip, victim_addr, type, hit, instr_id, current_set);

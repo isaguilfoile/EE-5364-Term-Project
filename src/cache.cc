@@ -1875,4 +1875,6 @@ bool CACHE::check_in_ulc(uint32_t set, uint32_t LRU_way, uint32_t cpu)
                 return true;
             }
         }
+
+    return false;
 }

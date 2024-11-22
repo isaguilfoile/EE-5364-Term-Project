@@ -25,7 +25,7 @@ void CACHE::QBS_Search(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_a
     uint32_t testerLRU = llc_find_victim(cpu, instr_id, set, current_set, ip, full_addr, type); // find LRU victim
     for (uint32_t i = 0; i < NUM_WAY; i++)
     {
-        if (block[set][i].data == block[set][testerLRU].data)
+        if (check_in_ulc(set, testerLRU, cpu))
         {
             // LRU victim is found in l1C
             // Do no replace, set as MRU in LLC

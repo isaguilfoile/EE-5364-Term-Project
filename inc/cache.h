@@ -220,6 +220,7 @@ class CACHE : public MEMORY {
     	     void shiftWQEntries(int index);
 	     void check_inclusive();
              bool make_inclusive(int cpu,int evict_cpu,CACHE &cache,uint64_t address,uint64_t instr_id);
+             bool check_in_ulc(uint32_t set, uint32_t LRU_way, uint32_t cpu);
 };
 
 #endif

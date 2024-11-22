@@ -6,11 +6,18 @@ uint32_t CACHE::find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const
     return lru_victim(cpu, instr_id, set, current_set, ip, full_addr, type); 
 }
 
-void CACHE::update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit)
+void CACHE::update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit, uint64_t instr_id, const BLOCK *current_set)
 {
+    
     if (type == WRITEBACK) {
         if (hit) // wrietback hit does not update LRU state
             return;
+    }
+    if(!hit){
+        uint32_t testerLRU = llc_find_victim(cpu, instr_id, set, current_set, ip, full_addr, type); // find LRU victim
+        // if (in upper level cache)
+        //  move to MRU in both LLC and ULC
+        //  update MRU as normal
     }
 
     return lru_update(set, way);

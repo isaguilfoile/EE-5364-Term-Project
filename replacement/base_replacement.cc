@@ -16,7 +16,7 @@ void CACHE::update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, u
     if(!hit){
         uint32_t testerLRU = llc_find_victim(cpu, instr_id, set, current_set, ip, full_addr, type); // find LRU victim
         for (uint32_t i=0; i<NUM_WAY; i++) {
-            if (block[set][i] == testerLRU){ //this is most likely wrong, but idk how else to do it rn
+            if (block[set][i] == block[set][testerLRU]){ //this is most likely wrong, but idk how else to do it rn
                 lru_update(set, testerLRU); // update cache
                 llc_update_replacement_state(cpu, set, way, full_addr, ip, victim_addr, type, hit, instr_id, current_set); //update cache
             }

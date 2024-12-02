@@ -1865,16 +1865,18 @@ void CACHE::check_inclusive(){
 
 }
 
-bool CACHE::check_in_ulc(uint32_t set, uint32_t LRU_way, uint32_t cpu)
-{
-    for (int l1dset = 0; l1dset < L1D_SET; l1dset++)
-        for (int l1dway = 0; l1dway < L1D_WAY; l1dway++)
-        {
-            if (ooo_cpu[cpu].L1D.block[l1dset][l1dway].data == uncore.LLC.block[set][LRU_way].data)
-            {
-                return true;
+bool CACHE::check_in_ulc(uint32_t set, uint32_t LRU_way, uint32_t cpu){
+
+    bool match = false;
+    for(int l2cset=0;l2cset<L2C_SET;l2cset++){
+		for(int l2cway=0;l2cway<L2C_WAY;l2cway++){
+            if (ooo_cpu[cpu].L2C.block[l2cset][l2cway].valid == 1){
+                if (ooo_cpu[cpu].L2C.block[l2cset][l2cway].tag == uncore.LLC.block[set][LRU_way].tag){
+                    match = true;
+                }
             }
         }
+    }
 
-    return false;
+    return match;
 }

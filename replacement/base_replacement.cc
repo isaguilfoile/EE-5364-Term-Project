@@ -14,23 +14,31 @@ void CACHE::update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, u
             return;
     }
     if(!hit){
-        QBS_Search(cpu, set, way, full_addr, ip, victim_addr, type, hit, instr_id, current_set); // search for value in L1C
+        QBS_Search(cpu, set, way, full_addr, ip, victim_addr, type, hit, instr_id, current_set, 0); // search for value in L1C
     }
 
     return lru_update(set, way); //update lru normally post QBS search
 }
 
-void CACHE::QBS_Search(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit, uint64_t instr_id, const BLOCK *current_set)
+void CACHE::QBS_Search(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit, uint64_t instr_id, const BLOCK *current_set, uint32_t ctr)
 {
     uint32_t testerLRU = llc_find_victim(cpu, instr_id, set, current_set, ip, full_addr, type); // find LRU victim
     for (uint32_t i = 0; i < NUM_WAY; i++)
     {
+        if (ctr > 1000){
+            return;
+        }
         if (check_in_ulc(set, testerLRU, cpu))
         {
             // LRU victim is found in l1C
             // Do no replace, set as MRU in LLC
             lru_update(set, testerLRU); //set value of LRU in LLC to MRU in L1C
-            // QBS_Search(cpu, set, way, full_addr, ip, victim_addr, type, hit, instr_id, current_set); // this seems unneccessary to me
+            ctr++;
+            QBS_Search(cpu, set, way, full_addr, ip, victim_addr, type, hit, instr_id, current_set, ctr); // this seems unneccessary to me
+            return;
+        }
+        else{
+            return;
         }
     }
     return llc_update_replacement_state(cpu, set, way, full_addr, ip, victim_addr, type, hit, instr_id, current_set);

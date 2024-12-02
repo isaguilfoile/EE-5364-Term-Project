@@ -32,8 +32,8 @@
 #define DP(x)
 #endif
 
-#define INCLUSIVE
-#define INCLUSIVE_PRINT
+// #define INCLUSIVE
+// #define INCLUSIVE_PRINT
 // CPU
 #define NUM_CPUS 1
 #define CPU_FREQ 4000

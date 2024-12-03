@@ -25,7 +25,7 @@ void CACHE::QBS_Search(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_a
     uint32_t testerLRU = llc_find_victim(cpu, instr_id, set, current_set, ip, full_addr, type); // find LRU victim
     for (uint32_t i = 0; i < NUM_WAY; i++)
     {
-        if (ctr > 1000){
+        if (ctr > 20){
             return;
         }
         if (check_in_ulc(set, testerLRU, cpu))
